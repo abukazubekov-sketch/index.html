@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>С Рамаданом 🌙</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      background: radial-gradient(circle at top, #1b4332, #081c15);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 15px;
+      color: #1b4332;
+    }
+
+    .card {
+      background: #fefcf7;
+      border-radius: 24px;
+      max-width: 400px;
+      width: 100%;
+      padding: 30px 22px;
+      text-align: center;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.35);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 90px;
+      background:
+        repeating-linear-gradient(
+          45deg,
+          rgba(212,175,55,0.18),
+          rgba(212,175,55,0.18) 10px,
+          transparent 10px,
+          transparent 20px
+        );
+    }
+
+    h1 { margin-top: 60px; font-size: 24px; }
+    h2 { font-size: 20px; }
+
+    p {
+      font-size: 16px;
+      line-height: 1.6;
+      margin: 12px 0;
+    }
+
+    button {
+      margin-top: 14px;
+      width: 100%;
+      padding: 13px;
+      border-radius: 14px;
+      border: none;
+      background: linear-gradient(135deg, #2d6a4f, #1b4332);
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+    }
+
+    input {
+      width: 100%;
+      margin-top: 10px;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    .hidden { display: none; }
+
+    .fade-in {
+      animation: fadeIn 1.2s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .moon {
+      position: fixed;
+      top: -30px;
+      font-size: 18px;
+      color: #d4af37;
+      pointer-events: none;
+      animation: fall linear forwards;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(110vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="card">
+  <h1>Амина, с месяцем Рамадан 🌙</h1>
+
+  <p id="text">
+    Пусть этот благословенный месяц принесёт тебе спокойствие,
+    чистые намерения и барракат в каждом дне 🤍
+  </p>
+
+  <div id="q1">
+    <p>Как ты ощущаешь этот Рамадан?</p>
+    <button onclick="vibrate([100,40,100]); next1('Спокойствие 🤍')">
+      Спокойствие 🤍
+    </button>
+    <button onclick="vibrate([100,40,100]); next1('Благодарность 🌙')">
+      Благодарность 🌙
+    </button>
+  </div>
+
+  <div id="q2" class="hidden">
+    <p>О чём ты чаще всего делаешь дуа в этом месяце?</p>
+    <input id="dua" placeholder="Напиши здесь...">
+    <button onclick="vibrate([150,50,150]); next2()">Продолжить</button>
+  </div>
+
+  <div id="q3" class="hidden">
+    <p>Последний вопрос 🕌</p>
+    <p>Хочешь, чтобы этот Рамадан оставил след в твоём сердце?</p>
+    <button onclick="finish()">Ин шаа Аллах 🌙</button>
+  </div>
+
+  <div id="final" class="hidden">
+    <h2>🌙🕌</h2>
+    <p id="finalText"></p>
+  </div>
+</div>
+
+<script>
+  /* 🔥 МАКСИМАЛЬНАЯ вибрация */
+  function vibrate(pattern) {
+    if (navigator.vibrate) {
+      navigator.vibrate(pattern);
+    }
+  }
+
+  function next1(answer) {
+    vibrate([80,30,80]);
+    document.getElementById("text").innerText =
+      "Пусть это состояние будет с тобой весь месяц: " + answer;
+    document.getElementById("q1").classList.add("hidden");
+    document.getElementById("q2").classList.remove("hidden");
+  }
+
+  function next2() {
+    vibrate([120,40,120]);
+    const dua = document.getElementById("dua").value || "искренность и свет";
+    document.getElementById("text").innerText =
+      "Пусть Аллах примет это: " + dua + " 🤲";
+    document.getElementById("q2").classList.add("hidden");
+    document.getElementById("q3").classList.remove("hidden");
+  }
+
+  function finish() {
+    // 💣 СУПЕР-СИЛЬНЫЙ ФИНАЛ
+    vibrate([300,100,300,100,300,100,500]);
+
+    document.getElementById("q3").classList.add("hidden");
+    const final = document.getElementById("final");
+    final.classList.remove("hidden");
+    final.classList.add("fade-in");
+    startMoonRain();
+    typeText(
+      "Амина, пусть Аллах укрепит твою веру, примет твой пост, дуа и намерения. " +
+      "Пусть этот Рамадан принесёт тебе свет, сабр и душевный покой 🌙"
+    );
+  }
+
+  function startMoonRain() {
+    let count = 0;
+    const interval = setInterval(() => {
+      const moon = document.createElement("div");
+      moon.className = "moon";
+      moon.innerText = "☪";
+      moon.style.left = Math.random() * 100 + "vw";
+      moon.style.animationDuration = 3 + Math.random() * 2 + "s";
+      document.body.appendChild(moon);
+      setTimeout(() => moon.remove(), 6000);
+      vibrate(40); // вибрация при каждом полумесяце
+      count++;
+      if (count > 35) clearInterval(interval);
+    }, 180);
+  }
+
+  function typeText(message) {
+    const el = document.getElementById("finalText");
+    el.innerHTML = "";
+    let i = 0;
+    const interval = setInterval(() => {
+      el.innerHTML += message[i];
+      vibrate(20); // сильная вибрация на каждый символ
+      i++;
+      if (i >= message.length) clearInterval(interval);
+    }, 45);
+  }
+</script>
+
+</body>
+</html>
